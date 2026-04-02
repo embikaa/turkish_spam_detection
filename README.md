@@ -68,7 +68,7 @@ Edit `config.py` to customize the following parameters:
 |-----------|---------|-------------|
 | `DATA_PATH` | `data/veri_seti_200k.csv` | Input data file path |
 | `BERT_MODEL` | `dbmdz/bert-base-turkish-cased` | BERT model for embeddings |
-| `SAMPLE_SIZE` | `20000` | Number of samples to process |
+| `SAMPLE_SIZE` | `None` | Number of samples to process |
 | `SPAM_THRESHOLD` | `0.8` | Weak labeling threshold |
 | `TFIDF_FEATURES` | `500` | Maximum TF-IDF features |
 | `PCA_COMPONENTS` | `256` | BERT dimensions after PCA |
