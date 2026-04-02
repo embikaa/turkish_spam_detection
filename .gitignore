@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+*.sqlite3
+.vscode/
+.idea/
+venv/
+results/
+*.png
+*.jpg
+*.ipynb_checkpoints/
