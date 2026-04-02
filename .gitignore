@@ -5,7 +5,4 @@ __pycache__/
 .vscode/
 .idea/
 venv/
-results/
-*.png
-*.jpg
 *.ipynb_checkpoints/
