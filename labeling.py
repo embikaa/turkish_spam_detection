@@ -1,12 +1,7 @@
-"""Weak supervision module for heuristic-based spam labeling."""
 import re
 from typing import Dict, List, Tuple
 
 import numpy as np
-
-# =============================================================================
-# REGEX PATTERNS (Pre-compiled for performance)
-# =============================================================================
 
 RE_PUNCTUATION = re.compile(r"[!?]")
 RE_EMOJI = re.compile(r"[\U0001F600-\U0001F6FF]")
@@ -15,12 +10,10 @@ RE_URL = re.compile(r"https?://|www\.")
 
 
 def count_spam_signals(text: str) -> int:
-    """Signals: short (<5 words), excessive !?, all-caps, emoji, repeated chars, URL."""
     return len(get_spam_signals(text))
 
 
 def get_spam_signals(text: str) -> List[str]:
-    """Tetiklenen spam sinyallerini Türkçe açıklamalarıyla döndürür."""
     if not isinstance(text, str):
         return []
 
@@ -29,28 +22,27 @@ def get_spam_signals(text: str) -> List[str]:
     word_count = len(words)
 
     if word_count < 5:
-        triggered.append("metin çok kısa (5 kelimeden az)")
+        triggered.append("Text is too short less than 5 words")
 
     if len(RE_PUNCTUATION.findall(text)) > 3:
-        triggered.append("aşırı noktalama işareti (!, ?)")
+        triggered.append("Oversampling of Punctuation")
 
     if text.isupper() and word_count > 1:
-        triggered.append("tümü büyük harfle yazılmış")
+        triggered.append("All text wrote uppercase")
 
     if RE_EMOJI.search(text):
-        triggered.append("emoji içeriyor")
+        triggered.append("Comment have emoji")
 
     if RE_REPEATED_CHAR.search(text):
-        triggered.append("tekrarlanan karakterler içeriyor")
+        triggered.append("Repeated words included")
 
     if RE_URL.search(text):
-        triggered.append("şüpheli bağlantı (URL) içeriyor")
+        triggered.append("Suspicious URL included")
 
     return triggered
 
 
 def label_texts(texts: List[str], threshold: int = 1) -> Tuple[np.ndarray, Dict]:
-    """np.int8 for memory efficiency."""
     labels = np.array(
         [1 if count_spam_signals(t) >= threshold else 0 for t in texts],
         dtype=np.int8
