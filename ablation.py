@@ -120,5 +120,3 @@ print("\n[3/3] TF-IDF + BERT (Hybrid)...")
 X_tr_h = combine_features(X_tr_tfidf, X_tr_bert_pca)
 X_te_h = combine_features(X_te_tfidf, X_te_bert_pca)
 train_eval(X_tr_h, X_te_h, y_train, y_test, "TF-IDF + BERT (Hybrid)")
-
-print("\nTamamlandı.")
