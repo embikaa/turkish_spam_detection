@@ -16,13 +16,7 @@ EXTRA_STOPWORDS = {
     "pek", "var", "yok", "isim", "ben", "sen", "biz", "siz", "onlar", "ya", "ki"
 }
 
-TURKISH_NAMES = {
-    "ahmet", "mehmet", "ali", "veli", "hasan", "hüseyin", "mustafa", "ibrahim",
-    "ayşe", "fatma", "zeynep", "elif"
-}
-
-# Combined stopword set
-STOPWORDS = NLTK_STOPWORDS.union(EXTRA_STOPWORDS).union(TURKISH_NAMES)
+STOPWORDS = NLTK_STOPWORDS.union(EXTRA_STOPWORDS)
 
 STEM_EXCEPTIONS = {
     "ürün", "iade", "kargo", "güzel", "aldım", "aldı", "orijinal",
