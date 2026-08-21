@@ -1,21 +1,13 @@
-"""Turkish text preprocessing with custom stemming and stopword handling."""
 import re
 from typing import List
 
 import nltk
 from nltk.corpus import stopwords
 
-# Download NLTK stopwords silently
 nltk.download('stopwords', quiet=True)
 
-# =============================================================================
-# STOPWORDS CONFIGURATION
-# =============================================================================
-
-# Base Turkish stopwords from NLTK
 NLTK_STOPWORDS = set(stopwords.words('turkish'))
 
-# Additional Turkish conjunctions, adverbs, and common words to prevent TF-IDF leakage
 EXTRA_STOPWORDS = {
     "bir", "bu", "şu", "o", "ne", "ve", "veya", "ama", "fakat", "çok", "gibi", "kadar",
     "daha", "olan", "olarak", "için", "ile", "de", "da", "mi", "mu", "mü", "mı", "en",
@@ -24,7 +16,6 @@ EXTRA_STOPWORDS = {
     "pek", "var", "yok", "isim", "ben", "sen", "biz", "siz", "onlar", "ya", "ki"
 }
 
-# Common Turkish names to exclude from analysis
 TURKISH_NAMES = {
     "ahmet", "mehmet", "ali", "veli", "hasan", "hüseyin", "mustafa", "ibrahim",
     "ayşe", "fatma", "zeynep", "elif"
@@ -33,38 +24,28 @@ TURKISH_NAMES = {
 # Combined stopword set
 STOPWORDS = NLTK_STOPWORDS.union(EXTRA_STOPWORDS).union(TURKISH_NAMES)
 
-# =============================================================================
-# STEMMING CONFIGURATION
-# =============================================================================
-
-# E-commerce terms that should not be stemmed
 STEM_EXCEPTIONS = {
     "ürün", "iade", "kargo", "güzel", "aldım", "aldı", "orijinal",
     "tavsiye", "teslim", "sipariş", "kalite", "kaliteli", "satıcı",
     "kullanışlı", "harika", "mükemmel", "teşekkür"
 }
 
-# Turkish suffixes ordered by length (longest first) for stemming
 SUFFIXES = [
-    # Very long suffixes
     'lerimizden', 'larımızdan', 'lerinden', 'lardan',
     'lerimize', 'larımıza', 'lerine', 'larına',
     'lerimizde', 'larımızda', 'lerinde', 'larında',
     'lerimizin', 'larımızın', 'lerinin', 'larının',
-    # Long suffixes
     'lerimden', 'larımdan', 'lerinden', 'lardan',
     'leriyle', 'larıyla', 'lerimiz', 'larımız',
     'lerince', 'larınca', 'leştir', 'laştır',
     'leşme', 'laşma', 'sinden', 'sından',
     'sine', 'sına', 'lerime', 'larıma',
     'lerimde', 'larımda', 'lerimle', 'larımla',
-    # Medium suffixes
     'lerden', 'lardan', 'lerde', 'larda',
     'lerin', 'ların', 'lere', 'lara',
     'lerim', 'larım', 'leri', 'ları',
     'imiz', 'ımız', 'sizde', 'sında',
     'ler', 'lar',
-    # Possessive suffixes
     'imiz', 'ımız', 'siniz', 'sınız',
     'im', 'ım', 'üm', 'um',
     'in', 'ın', 'ün', 'un',
@@ -72,11 +53,9 @@ SUFFIXES = [
     'sin', 'sın', 'sün', 'sun',
     'miz', 'mız', 'müz', 'muz',
     'niz', 'nız', 'nüz', 'nuz',
-    # Case suffixes
     'den', 'dan', 'ten', 'tan',
     'de', 'da', 'te', 'ta',
     'e', 'a',
-    # Verb suffixes
     'iyor', 'ıyor', 'üyor', 'uyor',
     'ecek', 'acak',
     'miş', 'mış', 'müş', 'muş',
@@ -86,19 +65,13 @@ SUFFIXES = [
     'mek', 'mak',
     'dim', 'dım', 'düm', 'dum',
     'tim', 'tım', 'tüm', 'tum',
-    # Diminutive suffixes
     'cık', 'cik', 'cuk', 'cük',
     'çık', 'çik', 'çuk', 'çük',
 ]
 
-# =============================================================================
-# REGEX PATTERNS
-# =============================================================================
-
 RE_URL = re.compile(r"http\S+|www.\S+")
 RE_PUNCTUATION = re.compile(r"[^\w\s]")
 RE_WHITESPACE = re.compile(r"\s+")
-
 
 def turkish_stem(word: str) -> str:
     if len(word) <= 2 or word in STEM_EXCEPTIONS:
@@ -111,12 +84,10 @@ def turkish_stem(word: str) -> str:
                 return stemmed
     return word
 
-
 def clean_for_bert(text: str) -> str:
     if not isinstance(text, str):
         return ""
     return RE_WHITESPACE.sub(" ", text).strip()
-
 
 def clean_for_tfidf(text: str) -> str:
     """Lowercase, URL strip, punctuation strip, stopword filter, Turkish stemming."""
