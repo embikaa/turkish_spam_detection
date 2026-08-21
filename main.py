@@ -1,4 +1,3 @@
-"""Main pipeline orchestration for Turkish spam detection system."""
 import gc
 import os
 import sys
@@ -51,7 +50,6 @@ def load_data(data_path: str, sample_size: int = None, seed: int = 42) -> list:
         print(f"Error: File not found -> {data_path}")
         sys.exit(1)
 
-    # Skip header row, drop empty lines
     texts = [line for line in lines[1:] if line.strip()]
 
     if sample_size and sample_size < len(texts):
@@ -65,7 +63,6 @@ def load_data(data_path: str, sample_size: int = None, seed: int = 42) -> list:
 
 
 def main():
-    """Execute the complete spam detection pipeline."""
     print("\n" + "=" * 60)
     print(" TURKISH SPAM DETECTION SYSTEM")
     print("=" * 60)
@@ -73,12 +70,10 @@ def main():
     set_seed(Config.SEED)
     os.makedirs(Config.RESULTS_DIR, exist_ok=True)
 
-    # Load data and apply weak labeling
     texts = load_data(Config.DATA_PATH, sample_size=Config.SAMPLE_SIZE, seed=Config.SEED)
     labels, label_stats = label_texts(texts, threshold=Config.SPAM_THRESHOLD)
     print_label_stats(label_stats)
 
-    # Train/test split
     print("\nSplitting dataset (Train/Test)...")
     train_texts, test_texts, y_train, y_test = train_test_split(
         texts, labels,
@@ -91,8 +86,7 @@ def main():
 
     print(f"Training set: {len(y_train):,}")
     print(f"Test set: {len(y_test):,}")
-
-    # Text preprocessing
+    
     print("\nPreprocessing texts...")
     print(" [1/2] Cleaning training data...")
     train_tfidf_clean = clean_texts(train_texts, method="tfidf")
@@ -101,7 +95,6 @@ def main():
     test_tfidf_clean = clean_texts(test_texts, method="tfidf")
     test_bert_clean = clean_texts(test_texts, method="bert")
 
-    # Feature extraction
     print("\n" + "-" * 60)
     print(" FEATURE EXTRACTION")
     print("-" * 60)
@@ -134,8 +127,7 @@ def main():
     X_test = combine_features(X_test_tfidf, X_test_bert_pca)
     del X_train_tfidf, X_test_tfidf, X_train_bert_pca, X_test_bert_pca
     gc.collect()
-
-    # Data preparation (scaling and balancing)
+    
     print("\nPreparing data (Scaling & Balancing)...")
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
@@ -152,7 +144,6 @@ def main():
     del X_train, X_train_scaled
     gc.collect()
 
-    # Model training and evaluation
     print("\n" + "-" * 60)
     print(" MODEL TRAINING")
     print("-" * 60)
@@ -162,7 +153,6 @@ def main():
     )
     print_results(results)
 
-    # Visualization
     print("\n" + "-" * 60)
     print(" VISUALIZATION AND ANALYSIS")
     print("-" * 60)
