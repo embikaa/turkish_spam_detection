@@ -1,4 +1,3 @@
-"""Visualization module for spam detection analysis and reporting."""
 import os
 import glob
 from typing import Dict, List, Optional, Any
@@ -30,7 +29,6 @@ COLORS = {
 
 
 def setup_style() -> None:
-    """Configure matplotlib styling for academic-quality figures."""
     plt.rcParams.update({
         "figure.facecolor": COLORS["bg"],
         "axes.facecolor": COLORS["bg"],
