@@ -1,4 +1,3 @@
-"""Model training and evaluation pipeline."""
 import gc
 import time
 from typing import Dict, List, Tuple, Any, Optional
@@ -17,7 +16,6 @@ from sklearn.metrics import (
 
 
 def get_models(seed: int = 42) -> Dict[str, Any]:
-    """Logistic Regression, Random Forest, LightGBM, ANN."""
     from sklearn.linear_model import LogisticRegression
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.neural_network import MLPClassifier
@@ -112,7 +110,6 @@ def train_and_evaluate(
 
 
 def print_results(results: Dict[str, Dict[str, Any]]) -> List[Tuple[str, Dict[str, Any]]]:
-    """Print results table sorted by F1, return sorted list."""
     sorted_results = sorted(
         results.items(),
         key=lambda x: x[1].get("f1", 0),
