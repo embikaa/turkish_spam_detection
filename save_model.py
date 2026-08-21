@@ -1,14 +1,3 @@
-"""
-Train the ANN pipeline and persist all artifacts to models/.
-
-Run once:  python save_model.py
-Outputs:
-  models/tfidf_vectorizer.joblib
-  models/pca_model.joblib
-  models/scaler.joblib
-  models/best_model.joblib   (ANN — MLPClassifier)
-  models/model_info.json
-"""
 import gc
 import json
 import os
@@ -76,7 +65,6 @@ def main():
     os.makedirs(MODELS_DIR, exist_ok=True)
     os.makedirs(Config.RESULTS_DIR, exist_ok=True)
 
-    # --- Veri ---
     texts = load_data(Config.DATA_PATH, sample_size=Config.SAMPLE_SIZE, seed=Config.SEED)
     labels, label_stats = label_texts(texts, threshold=Config.SPAM_THRESHOLD)
     print_label_stats(label_stats)
@@ -90,15 +78,13 @@ def main():
     del texts
     gc.collect()
 
-    # --- Ön işleme ---
-    print("\nMetinler ön işleniyor...")
+    print("\nComments preproccesing...")
     train_tfidf_clean = clean_texts(train_texts, method="tfidf")
     train_bert_clean = clean_texts(train_texts, method="bert")
     test_tfidf_clean = clean_texts(test_texts, method="tfidf")
     test_bert_clean = clean_texts(test_texts, method="bert")
 
-    # --- Özellik çıkarımı ---
-    print("\nÖzellikler çıkarılıyor...")
+    print("\nExtracting Features...")
     X_train_tfidf, X_test_tfidf, tfidf_vectorizer = create_tfidf_features(
         train_tfidf_clean, test_tfidf_clean, max_features=Config.TFIDF_FEATURES
     )
@@ -128,8 +114,7 @@ def main():
     del X_train_tfidf, X_test_tfidf, X_train_bert_pca, X_test_bert_pca
     gc.collect()
 
-    # --- Ölçekleme & dengeleme ---
-    print("\nVeri hazırlanıyor...")
+    print("\nPreparing the data...")
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
@@ -139,8 +124,7 @@ def main():
     del X_train, X_train_scaled
     gc.collect()
 
-    # --- Model eğitimi (ANN) ---
-    print("\nANN modeli eğitiliyor...")
+    print("\nANN is training...")
     ann = MLPClassifier(
         hidden_layer_sizes=(256, 128, 64),
         solver="adam",
@@ -159,8 +143,7 @@ def main():
     best_model = ann
     print(f"  F1: {best_metrics['f1']:.4f}  AUC: {best_metrics.get('auc', 0):.4f}")
 
-    # --- Kaydet ---
-    print("\nArtifact'lar kaydediliyor...")
+    print("\nArtifacts saving...")
     joblib.dump(tfidf_vectorizer, os.path.join(MODELS_DIR, "tfidf_vectorizer.joblib"))
     joblib.dump(pca_model,        os.path.join(MODELS_DIR, "pca_model.joblib"))
     joblib.dump(scaler,           os.path.join(MODELS_DIR, "scaler.joblib"))
@@ -183,7 +166,7 @@ def main():
         json.dump(model_info, f, ensure_ascii=False, indent=2)
 
     print("\n" + "=" * 60)
-    print(f" Kaydedilen konum: {MODELS_DIR}/")
+    print(f" Saved directory: {MODELS_DIR}/")
     print("  - tfidf_vectorizer.joblib")
     print("  - pca_model.joblib")
     print("  - scaler.joblib")
