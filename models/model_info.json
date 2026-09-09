@@ -1,0 +1,22 @@
+{
+  "best_model_name": "ANN",
+  "bert_model": "dbmdz/bert-base-turkish-cased",
+  "tfidf_features": 500,
+  "pca_components": 256,
+  "max_length": 128,
+  "metrics": {
+    "accuracy": 0.934,
+    "f1": 0.8884,
+    "precision": 0.9077,
+    "recall": 0.87,
+    "auc": 0.9708
+  },
+  "trained_at": "2026-07-08T16:00:26.616033",
+  "label_stats": {
+    "total": 203273,
+    "genuine": 141823,
+    "spam": 61450,
+    "genuine_pct": 69.77,
+    "spam_pct": 30.23
+  }
+}
