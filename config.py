@@ -1,4 +1,9 @@
-"""Configuration settings for the Turkish spam detection system."""
+"""Configuration settings for the Turkish spam detection system.
+
+Single source of truth for every hyperparameter that appears in the paper;
+the hyperparameter table the report asks for (Bulgu 8) is read from here
+and from train.get_models().
+"""
 import os
 
 
@@ -25,6 +30,16 @@ class Config:
     SEED = 42
     OVERSAMPLING_RATIO = 1.0
     SAMPLE_SIZE = None
+
+    # Multi-seed protocol (Bulgu 4): run_seeds.py repeats the full pipeline
+    # with these seeds and reports mean ± std plus McNemar/bootstrap tests.
+    SEEDS = [42, 0, 1, 2, 3]
+
+    # Paired bootstrap resamples for the between-model significance tests.
+    N_BOOTSTRAP = 1000
+
+    # Legacy: the labeling API is threshold-free now; kept only so older
+    # ad-hoc scripts do not crash. Not used by the pipeline any more.
     SPAM_THRESHOLD = 1.0
 
     # Explainability (SHAP) settings

@@ -1,22 +1,92 @@
 {
-  "best_model_name": "ANN",
-  "bert_model": "dbmdz/bert-base-turkish-cased",
-  "tfidf_features": 500,
-  "pca_components": 256,
-  "max_length": 128,
-  "metrics": {
-    "accuracy": 0.934,
-    "f1": 0.8884,
-    "precision": 0.9077,
-    "recall": 0.87,
-    "auc": 0.9708
+  "selected_model": "ANN",
+  "selection_metric": "macro_f1",
+  "selection_split": "validation",
+  "decision_threshold": 0.5,
+  "threshold_selected_on": "validation",
+  "seed": 42,
+  "oversampling_backend": "imbalanced-learn",
+  "feature_layout": {
+    "order": "TF-IDF then BERT-PCA",
+    "tfidf": 500,
+    "bert_pca": 256,
+    "total": 756
   },
-  "trained_at": "2026-07-08T16:00:26.616033",
-  "label_stats": {
-    "total": 203273,
-    "genuine": 141823,
-    "spam": 61450,
-    "genuine_pct": 69.77,
-    "spam_pct": 30.23
-  }
+  "splits": {
+    "train": 146356,
+    "validation": 16262,
+    "test": 40655
+  },
+  "dedup": null,
+  "config": {
+    "BERT_MODEL": "dbmdz/bert-base-turkish-cased",
+    "MAX_LENGTH": 128,
+    "BATCH_SIZE": 32,
+    "USE_FP16": true,
+    "TFIDF_FEATURES": 500,
+    "PCA_COMPONENTS": 256,
+    "TEST_SIZE": 0.2,
+    "VAL_SIZE": null,
+    "SEED": 42,
+    "OVERSAMPLING_RATIO": 1.0,
+    "SAMPLE_SIZE": null,
+    "DEDUP": null,
+    "ANN_SELECTION_METRIC": null
+  },
+  "metrics": {
+    "validation": {
+      "accuracy": 0.9966,
+      "f1": 0.8586,
+      "precision": 0.9239,
+      "recall": 0.8019,
+      "cm": [
+        [
+          16036,
+          14
+        ],
+        [
+          42,
+          170
+        ]
+      ],
+      "macro_f1": 0.9284,
+      "balanced_accuracy": 0.9005,
+      "genuine_precision": 0.9974,
+      "genuine_recall": 0.9991,
+      "genuine_f1": 0.9983,
+      "genuine_support": 16050,
+      "spam_support": 212,
+      "n_samples": 16262,
+      "threshold": 0.5,
+      "auc": 0.9737
+    },
+    "test": {
+      "accuracy": 0.9959,
+      "f1": 0.8296,
+      "precision": 0.9099,
+      "recall": 0.7623,
+      "cm": [
+        [
+          40085,
+          40
+        ],
+        [
+          126,
+          404
+        ]
+      ],
+      "macro_f1": 0.9138,
+      "balanced_accuracy": 0.8806,
+      "genuine_precision": 0.9969,
+      "genuine_recall": 0.999,
+      "genuine_f1": 0.9979,
+      "genuine_support": 40125,
+      "spam_support": 530,
+      "n_samples": 40655,
+      "threshold": 0.5,
+      "auc": 0.9788
+    }
+  },
+  "consistent_with_metrics_json": true,
+  "trained_at": "2026-11-10T21:36:14"
 }

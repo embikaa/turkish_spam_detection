@@ -1,0 +1,209 @@
+{
+  "method": "Shapley values (SHAP), not permutation importance",
+  "explainer": "shap.KernelExplainer",
+  "shap_version": "0.54.1",
+  "nsamples": "auto",
+  "nsamples_used": 3140,
+  "l1_reg": "aic",
+  "explained_output": "predicted spam probability",
+  "model": "ANN",
+  "decision_threshold": 0.5,
+  "threshold_selected_on": "validation",
+  "seed": 42,
+  "background": {
+    "source": "train split",
+    "size": 100
+  },
+  "explained": {
+    "source": "test split",
+    "size": 200,
+    "true_spam": 2,
+    "predicted_spam_at_threshold": 1
+  },
+  "bootstrap_replicates": 1000,
+  "feature_space": {
+    "tfidf": 500,
+    "bert_pca": 256,
+    "total": 756
+  },
+  "block_share_of_mean_abs_shap": {
+    "tfidf": 0.477217,
+    "tfidf_ci95": [
+      0.44669,
+      0.501906
+    ],
+    "bert_pca": 0.522783,
+    "bert_pca_ci95": [
+      0.498094,
+      0.55331
+    ]
+  },
+  "top_features": [
+    {
+      "rank": 1,
+      "feature": "bert_pca_85",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000802,
+      "ci95": [
+        0.000382,
+        0.001646
+      ],
+      "topn_frequency": 0.973
+    },
+    {
+      "rank": 2,
+      "feature": "bert_pca_29",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000784,
+      "ci95": [
+        0.000302,
+        0.001584
+      ],
+      "topn_frequency": 0.943
+    },
+    {
+      "rank": 3,
+      "feature": "bert_pca_46",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000684,
+      "ci95": [
+        0.000349,
+        0.001201
+      ],
+      "topn_frequency": 0.979
+    },
+    {
+      "rank": 4,
+      "feature": "bert_pca_15",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000673,
+      "ci95": [
+        0.000406,
+        0.001118
+      ],
+      "topn_frequency": 0.953
+    },
+    {
+      "rank": 5,
+      "feature": "bert_pca_34",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000625,
+      "ci95": [
+        0.000301,
+        0.001159
+      ],
+      "topn_frequency": 0.834
+    },
+    {
+      "rank": 6,
+      "feature": "bert_pca_56",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000623,
+      "ci95": [
+        0.00028,
+        0.00128
+      ],
+      "topn_frequency": 0.719
+    },
+    {
+      "rank": 7,
+      "feature": "bert_pca_70",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000611,
+      "ci95": [
+        0.000248,
+        0.00109
+      ],
+      "topn_frequency": 0.743
+    },
+    {
+      "rank": 8,
+      "feature": "bert_pca_104",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000593,
+      "ci95": [
+        0.00035,
+        0.000899
+      ],
+      "topn_frequency": 0.784
+    },
+    {
+      "rank": 9,
+      "feature": "bert_pca_73",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000529,
+      "ci95": [
+        0.000189,
+        0.001082
+      ],
+      "topn_frequency": 0.513
+    },
+    {
+      "rank": 10,
+      "feature": "bert_pca_44",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000523,
+      "ci95": [
+        0.000323,
+        0.000777
+      ],
+      "topn_frequency": 0.54
+    },
+    {
+      "rank": 11,
+      "feature": "bert_pca_132",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000522,
+      "ci95": [
+        0.000224,
+        0.000939
+      ],
+      "topn_frequency": 0.406
+    },
+    {
+      "rank": 12,
+      "feature": "bert_pca_78",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000514,
+      "ci95": [
+        0.000256,
+        0.001009
+      ],
+      "topn_frequency": 0.463
+    },
+    {
+      "rank": 13,
+      "feature": "bert_pca_10",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000512,
+      "ci95": [
+        0.000236,
+        0.000862
+      ],
+      "topn_frequency": 0.429
+    },
+    {
+      "rank": 14,
+      "feature": "bert_pca_48",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.000511,
+      "ci95": [
+        0.000229,
+        0.001079
+      ],
+      "topn_frequency": 0.439
+    },
+    {
+      "rank": 15,
+      "feature": "bert_pca_1",
+      "block": "bert_pca",
+      "mean_abs_shap": 0.0005,
+      "ci95": [
+        0.000325,
+        0.000722
+      ],
+      "topn_frequency": 0.437
+    }
+  ],
+  "figure": "10_shap_top15.png"
+}

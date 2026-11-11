@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-11-11T18:12:56",
+  "device": "cuda",
+  "bert_model": "dbmdz/bert-base-turkish-cased",
+  "batch_size": 32,
+  "max_length": 128,
+  "use_fp16": true,
+  "n_train": 146356,
+  "n_validation": 16262,
+  "n_test": 40655,
+  "tfidf_fit_transform_seconds": 3.22,
+  "bert_embedding_seconds": 157.26,
+  "bert_ms_per_sample": 0.774,
+  "pca_fit_transform_seconds": 121.69
+}

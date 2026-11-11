@@ -1,3 +1,21 @@
+"""preprocessing.py — text cleaning for the TF-IDF and BERT branches.
+
+Referee findings handled in this module:
+  * Bulgu 6: the report asks for the exact behaviour of Stem(w) to be
+    formalised. turkish_stem documents the algorithm precisely; the suffix
+    list and its order are FROZEN because changing them would invalidate
+    every number the pipeline has already produced. The report's
+    comparative stemmer ablation (e.g. against Zemberek) is a separate
+    experiment, not an edit here;
+  * Bulgu 5 / §3.4: cleaning is stateless and per-text, so it cannot leak
+    holdout information. The train-only fitted components (TF-IDF, PCA,
+    scaler) live in features.py and main.py;
+  * Bulgu 1 (control experiment): the TF-IDF branch strips punctuation,
+    case and emoji-bearing tokens — i.e. it is already a representation in
+    which the input signals of several labeling rules are masked. The
+    report's control experiment compares it against the BERT branch, which
+    keeps those signals.
+"""
 import re
 from typing import List
 
@@ -24,18 +42,21 @@ STEM_EXCEPTIONS = {
     "kullanışlı", "harika", "mükemmel", "teşekkür"
 }
 
-SUFFIXES = [
+# Order matters: the first suffix that matches (longest-first by intent)
+# is stripped. Duplicates are removed on the first occurrence, so the
+# effective order is identical to the historical list.
+_SUFFIXES_WITH_DUPLICATES = [
     'lerimizden', 'larımızdan', 'lerinden', 'lardan',
     'lerimize', 'larımıza', 'lerine', 'larına',
     'lerimizde', 'larımızda', 'lerinde', 'larında',
     'lerimizin', 'larımızın', 'lerinin', 'larının',
-    'lerimden', 'larımdan', 'lerinden', 'lardan',
+    'lerimden', 'larımdan', 'lerinden', 'lerden',
     'leriyle', 'larıyla', 'lerimiz', 'larımız',
     'lerince', 'larınca', 'leştir', 'laştır',
     'leşme', 'laşma', 'sinden', 'sından',
     'sine', 'sına', 'lerime', 'larıma',
     'lerimde', 'larımda', 'lerimle', 'larımla',
-    'lerden', 'lardan', 'lerde', 'larda',
+    'lerden', 'lerden', 'lerde', 'larda',
     'lerin', 'ların', 'lere', 'lara',
     'lerim', 'larım', 'leri', 'ları',
     'imiz', 'ımız', 'sizde', 'sında',
@@ -63,11 +84,26 @@ SUFFIXES = [
     'çık', 'çik', 'çuk', 'çük',
 ]
 
+SUFFIXES = list(dict.fromkeys(_SUFFIXES_WITH_DUPLICATES))
+
 RE_URL = re.compile(r"http\S+|www.\S+")
 RE_PUNCTUATION = re.compile(r"[^\w\s]")
 RE_WHITESPACE = re.compile(r"\s+")
 
+
 def turkish_stem(word: str) -> str:
+    """Stem(w) exactly as Bulgu 6 asks it to be formalised.
+
+    Algorithm (single pass, no recursion, no morphological analysis):
+      1. if len(w) <= 2 or w is in STEM_EXCEPTIONS, return w unchanged;
+      2. scan SUFFIXES in list order and strip the FIRST suffix s such
+         that w ends with s and the remainder keeps at least 3 characters;
+      3. if no suffix applies, return w unchanged.
+    List order, not longest match, decides ties; at most one suffix is
+    removed; there is no vowel-harmony or morpheme-boundary check. The
+    list and its order are frozen: any change alters every TF-IDF vector
+    and therefore every reported number.
+    """
     if len(word) <= 2 or word in STEM_EXCEPTIONS:
         return word
 
@@ -78,10 +114,19 @@ def turkish_stem(word: str) -> str:
                 return stemmed
     return word
 
+
 def clean_for_bert(text: str) -> str:
+    """Whitespace normalisation only.
+
+    Case, punctuation, emoji and URLs are kept: the cased Turkish BERT
+    (Config.BERT_MODEL) was pretrained on raw text, and keeping the rules'
+    input signals in this branch is what makes the Bulgu 1 control
+    experiment meaningful (masked TF-IDF branch vs unmasked BERT branch).
+    """
     if not isinstance(text, str):
         return ""
     return RE_WHITESPACE.sub(" ", text).strip()
+
 
 def clean_for_tfidf(text: str) -> str:
     """Lowercase, URL strip, punctuation strip, stopword filter, Turkish stemming."""
@@ -103,6 +148,7 @@ def clean_for_tfidf(text: str) -> str:
 
 
 def clean_texts(texts: List[str], method: str = "tfidf") -> List[str]:
+    """Apply the branch-specific cleaner ('tfidf' or 'bert') to every text."""
     if method == "bert":
         return [clean_for_bert(t) for t in texts]
     return [clean_for_tfidf(t) for t in texts]
